@@ -1,0 +1,5 @@
+pypicloud[server]==1.0.6
+uwsgi
+pastescript
+jinja2
+passlib

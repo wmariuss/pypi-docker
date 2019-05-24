@@ -1,0 +1,17 @@
+version: "3.7"
+services:
+  pypi:
+    container_name: pypi
+    build: .
+    env_file:
+      - env
+    ports:
+      - "8080:8080"
+      - "3031:3031"
+      - "6543:6543" # dev
+    restart: always
+    volumes:
+      - pypi-data:/code
+
+volumes:
+  pypi-data:
