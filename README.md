@@ -1,6 +1,6 @@
 # pypi
 
-Deploy pypi server for private python libs/packages.
+Deploy `PyPi` server for hosting Python libs/packages.
 
 ## Requirements
 
@@ -16,3 +16,7 @@ Deploy pypi server for private python libs/packages.
 Optional
 
 * Install nginx `invoke nginx --pypi`
+
+## Authors
+
+* [Marius Stanca](mailto:me@marius.xyz)
