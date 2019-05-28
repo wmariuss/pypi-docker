@@ -2,6 +2,9 @@
 
 Deploy `PyPi` server for hosting Python libs/packages.
 
+* Deploy using `docker` and `docker-compose`
+* Install and configure proxy
+
 ## Requirements
 
 * `Python >= 3.6`
