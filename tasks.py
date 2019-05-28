@@ -1,6 +1,12 @@
 #!/usr/bin/env python
 import os
+from pathlib import Path
 from invoke import task, call
+
+
+def env_file():
+    if not os.path.isfile('env'):
+        Path('env').touch()
 
 
 @task
@@ -12,7 +18,7 @@ def install(c, docker=False, compose=False):
         c.run("sudo apt install curl -y")
         c.run("curl -fsSL get.docker.com -o get-docker.sh")
         c.run("sudo sh get-docker.sh")
-        c.run("sudo usermod -aG docker ubuntu")
+        c.run("sudo usermod -aG docker $(whoami)")
         c.run("sudo rm get-docker.sh")
     if compose:
         c.run("sudo curl -L https://github.com/docker/compose/releases/download/1.24.0/docker-compose-$(uname -s)-$(uname -m) -o /usr/local/bin/docker-compose")
@@ -51,6 +57,7 @@ def build(c, pypi=False):
     docker build
     '''
     if pypi:
+        env_file()
         c.run("sudo docker-compose build")
 
 
@@ -60,6 +67,7 @@ def run(c, pypi=False):
     docker up
     '''
     if pypi:
+        env_file()
         c.run("sudo docker-compose up -d")
 
 
