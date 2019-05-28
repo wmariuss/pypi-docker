@@ -35,16 +35,15 @@ def nginx(c, pypi=False):
     c.run("sudo apt update")
     c.run("sudo apt install nginx-full -y")
     c.run("sudo mkdir -p {}".format(ssl_path))
+    c.run("sudo chown $(whoami) -R {}".format(ssl_path))
     if os.path.exists(ssl_path):
-        c.run('cd {}'.format(ssl_path))
-        c.run('openssl genrsa 2048 > host.key')
-        c.run('openssl req -new -x509 -nodes -sha1 -days 3650 -key host.key -out host.cert\
-               -subj "/C=RO/ST=Bucharest/L=Bucharest/O=Global Security/OU=IT Department/CN=pypi.marius.xyz"')
-        c.run('openssl x509 -noout -fingerprint -text < host.cert > host.info')
-        c.run('cat host.cert host.key > host.pem')
-        c.run('chmod 400 host.key host.pem')
+        c.run("openssl genrsa 2048 > {0}/host.key".format(ssl_path))
+        c.run("openssl req -new -x509 -nodes -sha1 -days 3650 -key {0}/host.key -out {0}/host.cert \
+               -subj '/C=RO/ST=Bucharest/L=Bucharest/O=Global Security/OU=IT Department/CN=pypi.marius.xyz'".format(ssl_path))
+        c.run("openssl x509 -noout -fingerprint -text < {0}/host.cert > {0}/host.info".format(ssl_path))
+        c.run("cat {0}/host.cert {0}/host.key > {0}/host.pem".format(ssl_path))
+        c.run("chmod 400 {0}/host.key {0}/host.pem".format(ssl_path))
     if pypi:
-        c.run('cd')
         c.run("sudo cp nginx/pypi.conf /etc/nginx/conf.d/")
         if True:
             print("Restarting nginx...")
