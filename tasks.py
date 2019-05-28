@@ -38,7 +38,8 @@ def nginx(c, pypi=False):
     if os.path.exists(ssl_path):
         c.run('cd {}'.format(ssl_path))
         c.run('openssl genrsa 2048 > host.key')
-        c.run('openssl req -new -x509 -nodes -sha1 -days 3650 -key host.key > host.cert')
+        c.run('openssl req -new -x509 -nodes -sha1 -days 3650 -key host.key -out host.cert\
+               -subj "/C=RO/ST=Bucharest/L=Bucharest/O=Global Security/OU=IT Department/CN=pypi.marius.xyz"')
         c.run('openssl x509 -noout -fingerprint -text < host.cert > host.info')
         c.run('cat host.cert host.key > host.pem')
         c.run('chmod 400 host.key host.pem')
