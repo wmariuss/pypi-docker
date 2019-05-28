@@ -1,12 +1,12 @@
 #!/usr/bin/env python
 import os
-from pathlib import Path
 from invoke import task, call
 
 
 def env_file():
-    if not os.path.isfile('env'):
-        Path('env').touch()
+    file = 'env'
+    if not os.path.isfile(file):
+        open(file, 'w').close()
 
 
 @task
