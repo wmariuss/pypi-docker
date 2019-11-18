@@ -1,5 +1,7 @@
 # pypi
 
+[![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
+
 Deploy `PyPi` server for hosting Python libs/packages.
 
 * Deploy using `docker` and `docker-compose`
@@ -7,6 +9,7 @@ Deploy `PyPi` server for hosting Python libs/packages.
 
 ## Requirements
 
+* `Ubuntu >= 18.04`
 * `Python >= 3.6`
 
 ## Install

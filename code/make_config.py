@@ -17,55 +17,55 @@ def make_config():
 
     :return:
     """
-    env = os.environ['ENV']
-    assert env in ['dev', 'test', 'prod'], "ENV must be dev/test/prod"
-    username = os.environ.get('ADMIN_USERNAME', 'pypi')
-    password = os.environ.get('ADMIN_PASSWORD', 'pypi')
-    docker = os.environ.get('DOCKER')
+    env = os.environ["ENV"]
+    assert env in ["dev", "test", "prod"], "ENV must be dev/test/prod"
+    username = os.environ.get("ADMIN_USERNAME", "pypi")
+    password = os.environ.get("ADMIN_PASSWORD", "pypi")
+    docker = os.environ.get("DOCKER")
 
-    outfile = 'server.ini'
-    storage = os.environ['STORAGE']
-    assert storage in ['s3', 'file'], "STORAGE must be s3/file"
+    outfile = "server.ini"
+    storage = os.environ["STORAGE"]
+    assert storage in ["s3", "file"], "STORAGE must be s3/file"
 
-    session_secure = os.environ.get('SESSION_SECURE')
+    session_secure = os.environ.get("SESSION_SECURE")
 
-    if docker.lower() == 'yes':
+    if docker.lower() == "yes":
         docker = docker
 
     if not session_secure:
-        session_secure = env == 'prod'
+        session_secure = env == "prod"
 
     data = {
-        'env': env,
-        'reload_templates': env == 'dev',
-        'storage': storage,
-        'encrypt_key': b64encode(os.urandom(32)),
-        'validate_key': b64encode(os.urandom(32)),
-        'admin': username,
-        'password': pwd_context.encrypt(password),
-        'session_secure': session_secure,
-        'docker': docker
+        "env": env,
+        "reload_templates": env == "dev",
+        "storage": storage,
+        "encrypt_key": b64encode(os.urandom(32)),
+        "validate_key": b64encode(os.urandom(32)),
+        "admin": username,
+        "password": pwd_context.encrypt(password),
+        "session_secure": session_secure,
+        "docker": docker,
     }
 
     data.update(load_read_user())
 
-    if storage == 's3':
+    if storage == "s3":
         data.update(load_s3_params())
 
-    if env == 'dev' or env == 'test':
-        data['wsgi'] = 'waitress'
+    if env == "dev" or env == "test":
+        data["wsgi"] = "waitress"
     else:
-        if hasattr(sys, 'real_prefix'):
-            data['env'] = sys.prefix
-        data['wsgi'] = 'uwsgi'
+        if hasattr(sys, "real_prefix"):
+            data["env"] = sys.prefix
+        data["wsgi"] = "uwsgi"
 
     current_folder = abspath(dirname(__file__))
-    template_file = join(current_folder, 'config.ini.jinja2')
+    template_file = join(current_folder, "config.ini.jinja2")
     tmpl_str = open(template_file).read()
     template = Template(tmpl_str)
 
     config_file = template.render(**data)
-    with open(outfile, 'w') as ofile:
+    with open(outfile, "w") as ofile:
         ofile.write(config_file)
 
     print("Config file written to '{}'".format(outfile))
@@ -73,21 +73,21 @@ def make_config():
 
 def load_s3_params():
     return {
-        'access_key': os.environ['AWS_ACCESS_KEY_ID'],
-        'secret_key': os.environ['AWS_SECRET_ACCESS_KEY'],
-        's3_bucket': os.environ['S3_BUCKET'],
+        "access_key": os.environ["AWS_ACCESS_KEY_ID"],
+        "secret_key": os.environ["AWS_SECRET_ACCESS_KEY"],
+        "s3_bucket": os.environ["S3_BUCKET"],
     }
 
 
 def load_read_user():
-    if 'READ_USER' in os.environ and 'READ_USER_PASSWORD' in os.environ:
+    if "READ_USER" in os.environ and "READ_USER_PASSWORD" in os.environ:
         return {
-            'read_user': os.environ['READ_USER'],
-            'read_user_password': pwd_context.encrypt(os.environ['READ_USER_PASSWORD']),
+            "read_user": os.environ["READ_USER"],
+            "read_user_password": pwd_context.encrypt(os.environ["READ_USER_PASSWORD"]),
         }
 
     return {}
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     make_config()
